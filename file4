@@ -1,0 +1,121 @@
+class TicTacToe:
+  """A class for playing tic tac toe"""
+
+  def __init__(self):
+    self.values = ["-", "-", "-", 
+                  "-", "-", "-", 
+                  "-", "-", "-"]
+    self.player = "x"
+
+
+  def show_board(self):
+    print(f"{self.values[0]} | {self.values[1]} | {self.values[2]}")
+    print(f"{self.values[3]} | {self.values[4]} | {self.values[5]}")
+    print(f"{self.values[6]} | {self.values[7]} | {self.values[8]}")
+
+
+  def play_game(self):
+    # display initial board
+    self.show_board()
+    # play for 9 turns max
+    for i in range(9):
+      self.handle_turn(self.values)
+      if self.check_tie() or self.winner():
+        break
+
+
+  def handle_turn(self, values):
+    # get next move from a player
+    try:
+      turn = int(input(f"Player {self.player} pick a square (1-9) from left to right: "))
+    except ValueError:
+      self.handle_turn(self.values)
+      return
+    
+    # change values to show the move made (check square empty)
+    if self.values[turn-1] == "x" or self.values[turn-1] == "o":
+      print("That square has been played already!")
+      self.handle_turn(self.values)
+    else:
+      self.values[turn-1] = self.player
+      self.show_board()
+    # switch turns
+    self.flip_player()
+
+
+  def winner(self):
+    # check all possible win methods
+    self.row_winner = self.check_rows()
+    self.column_winner = self.check_columns()
+    self.diagonal_winner = self.check_diagonals()
+    #declare a winner
+    if self.row_winner:
+      winner = self.check_rows()
+      print(f"{winner} has won the game!")
+      return True
+    elif self.column_winner:
+      winner = self.check_columns()
+      print(f"{winner} has won the game!")
+      return True
+    elif self.diagonal_winner:
+      winner = self.check_diagonals()
+      print(f"{winner} has won the game!")
+      return True
+
+
+  def check_rows(self):
+    # Check for a win in the rows
+    row1 = self.values[0] == self.values[1] == self.values[2] != "-"
+    row2 = self.values[3] == self.values[4] == self.values[5] != "-"
+    row3 = self.values[6] == self.values[7] == self.values[8] != "-"
+    # Return the player that has won
+    if row1:
+      return self.values[0]
+    elif row2:
+      return self.values[3]
+    elif row3:
+      return self.values[6]  
+  
+
+  def check_columns(self):
+    # Check for a win in the columns
+    col1 = self.values[0] == self.values[3] == self.values[6] != "-"
+    col2 = self.values[1] == self.values[4] == self.values[7] != "-"
+    col3 = self.values[2] == self.values[5] == self.values[8] != "-"
+    # Return the winning player
+    if col1:
+      return self.values[0]
+    elif col2:
+      return self.values[1]
+    elif col3:
+      return self.values[2]
+
+
+  def check_diagonals(self):
+    # Check for win in the diagonals
+    dia1 = self.values[0] == self.values[4] == self.values[8] != "-"
+    dia2 = self.values[2] == self.values[4] == self.values[6] != "-"
+    # Return the player that has won
+    if dia1:
+      return self.values[0]
+    elif dia2:
+      return self.values[2]
+
+
+  def check_tie(self):
+    if "-" not in self.values:
+      print("Game is a tie!")
+      return True
+    else:
+      return False
+
+
+  def flip_player(self):
+    if self.player == "x":
+      self.player = "o"
+    else:
+      self.player = "x"
+
+if __name__ == "__main__":
+  new_board = TicTacToe()
+  new_board.play_game()
